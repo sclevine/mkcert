@@ -6,7 +6,7 @@ package main
 
 import (
 	"crypto"
-	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/rsa"
@@ -164,6 +164,10 @@ func (m *mkcert) printHosts(hosts []string) {
 }
 
 func (m *mkcert) generateKey(rootCA bool) (crypto.PrivateKey, error) {
+	if m.ed25519 {
+		_, key, err := ed25519.GenerateKey(rand.Reader)
+		return key, err
+	}
 	if m.ecdsa {
 		return ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	}
